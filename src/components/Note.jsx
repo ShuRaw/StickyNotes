@@ -53,6 +53,11 @@ class Note extends Component {
     event.preventDefault()
   }
 
+  handleClick = event => {
+    const { id, makeActive } = this.props
+    makeActive(id, event)
+  }
+
   render() {
     const { id, updated, hideNote, styleClass, ...style} = this.props
     const {title, content} = this.state
@@ -68,7 +73,7 @@ class Note extends Component {
     }
 
     return (
-      <div onDoubleClick={this.handleDoubleClick} id={`note-${id}`} style={{...style}} className={`note class-${styleClass}`}>
+      <div onClick={this.handleClick} onDoubleClick={this.handleDoubleClick} id={`note-${id}`} style={{...style}} className={`note class-${styleClass}`}>
         <div className="pin" onDoubleClick={hideNote} onMouseDown={this.handlePinClick}><Pin /></div>
         <input className="note-header" onFocus={this.handleFocus} value={title} onChange={event => this.handleChange('title', event)}/>
         <textarea className="note-body" onFocus={this.handleFocus} value={content} onChange={event => this.handleChange('content', event)}/>
