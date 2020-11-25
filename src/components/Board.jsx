@@ -10,7 +10,7 @@ class Board extends Component {
       0: {
         id: 0,
         title: "This is a Sticky Note",
-        content: "You can add more notes if you want. Just double click the board. You can move by clicking on the pin, resize a note from the bottom right corner. You can delete a note by double clicking the pin(But not this one). You can simply edit the title and content by clicking on them.",
+        content: "You can add more notes if you want. Just double click the board. You can move by clicking on the pin, resize a note from the bottom right corner. You can delete a note by pressing alt and double clicking the pin(not this one). You can simply edit the title and content by clicking on them.",
         updated: 0,
         top: 50,
         left: 50,
@@ -150,7 +150,8 @@ class Board extends Component {
 
   hideNote = (id, event) => {
     event.stopPropagation()
-    if(id === 0) return
+    console.log(event)
+    if(id === 0 || !event.altKey) return
 
     console.log("Hiding an element!")
     this.handleChange(id, 'hidden', true)
