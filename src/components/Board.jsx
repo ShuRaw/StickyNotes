@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import Note from './Note'
 import './components.scss'
-import { getRandomNumber } from '../utils/common_functions.js'
+import { getRandomNumber, updateLocalStorage } from '../utils/common_functions.js'
 
 class Board extends Component {
   state = {
@@ -30,6 +30,19 @@ class Board extends Component {
     action: "",
     acting: false,
     active: -1
+  }
+
+  componentDidMount() {
+    const allIds = JSON.parse(localStorage.getItem('allIds'))
+    const byIds = JSON.parse(localStorage.getItem('byIds'))
+    const count = JSON.parse(localStorage.getItem('count'))
+    if (allIds === null || byIds === null || count === null) {
+      updateLocalStorage('allIds', this.state.allIds)
+      updateLocalStorage('byIds', this.state.byIds)
+      updateLocalStorage('count', this.state.count)
+      return
+    }
+    this.setState({allIds, byIds, count})
   }
 
   startAction = (id, event, type) => {
@@ -84,7 +97,7 @@ class Board extends Component {
 
   stopActionOnItem = event => {
     event.stopPropagation()
-    const {acting, active} = this.state
+    const {acting, active, byIds} = this.state
 
     if(!acting) return
     console.log(`Done with item: ${active}`)
@@ -99,6 +112,8 @@ class Board extends Component {
         prevY: 0
       }
     })
+
+    updateLocalStorage('byIds', byIds)
   }
 
   addNote = () => {
@@ -127,6 +142,10 @@ class Board extends Component {
       active: count,
       allIds
     })
+
+    updateLocalStorage('allIds', allIds)
+    updateLocalStorage('byIds', byIds)
+    updateLocalStorage('count', count + 1)
   }
 
   hideNote = (id, event) => {
@@ -140,13 +159,18 @@ class Board extends Component {
   handleChange = (id, key, value) => {
     if(id === 0) return
     const { byIds } = this.state
+    const date = new Date()
+    const timestamp = date.getTime()
 
     const note = byIds[id]
     note[key] = value
+    note.updated = timestamp
 
     this.setState({
       byIds: {...byIds, [id]: note}
     })
+
+    updateLocalStorage('byIds', byIds)
   }
 
   render() {
