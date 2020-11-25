@@ -48,8 +48,9 @@ class Note extends Component {
     event.target.select()
   }
 
-  handleFocusLost = event => {
-
+  handleDoubleClick = event => {
+    event.stopPropagation()
+    event.preventDefault()
   }
 
   render() {
@@ -67,7 +68,7 @@ class Note extends Component {
     }
 
     return (
-      <div id={`note-${id}`} style={{...style}} className={`note class-${styleClass}`}>
+      <div onDoubleClick={this.handleDoubleClick} id={`note-${id}`} style={{...style}} className={`note class-${styleClass}`}>
         <div className="pin" onDoubleClick={hideNote} onMouseDown={this.handlePinClick}><Pin /></div>
         <input className="note-header" onFocus={this.handleFocus} value={title} onChange={event => this.handleChange('title', event)}/>
         <textarea className="note-body" onFocus={this.handleFocus} value={content} onChange={event => this.handleChange('content', event)}/>
